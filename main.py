@@ -2,13 +2,10 @@ import nest_asyncio
 nest_asyncio.apply()
 from nicegui import ui
 
-#!/usr/bin/env python3
-from nicegui import ui
-
 # Palabras disponibles y claves de frases
 palabras = [
     'Decision Split',
-    'Audience Splits',
+    'Audience Paths',
     'Action Paths',
     'Experiment Paths',
     'Exit Criteria',
@@ -20,7 +17,7 @@ palabras = [
 frases = {
     'f1': ('Prueba rutas al azar y elige la mejor tras un periodo. {}', 'Experiment Paths'),
     'f2': ('Saca al usuario del Canvas si cumple una condición clave. {}', 'Exit Criteria'),
-    'f3': ('Divide hasta en 8 rutas con base en atributos del usuario. {}', 'Audience Splits'),
+    'f3': ('Divide hasta en 8 rutas con base en atributos del usuario. {}', 'Audience Paths'),
     'f4': ('Divide rutas según eventos completados en un plazo. {}', 'Action Paths'),
     'f5': ('Define tras cuánto tiempo un usuario puede reentrar al Canvas. {}', 'Re-eligibility'),
     'f6': ('Divide en 2 rutas según un atributo verdadero o falso. {}', 'Decision Split'),
@@ -34,7 +31,7 @@ palabra_arrastrada = None
 botones_palabras = {}
 
 # Título
-ui.label('🚦 Business Decision Game').style('font-size: 34px; font-weight: bold; margin-bottom: 10px; color: #991b1b;')
+ui.label('🚦 Business Decision Game').style('font-size: 50px; font-weight: bold; margin-bottom: 10px; color: #991b1b;')
 
 # 📋 Instrucciones
 with ui.card().classes('mt-6 p-4 bg-red-50'):
@@ -60,7 +57,7 @@ def asignar_a_frase(clave):
     global palabra_arrastrada
     if palabra_arrastrada:
         asignaciones[clave] = palabra_arrastrada
-        actualizar_frases()  # 👈 actualiza la frase en el momento
+        actualizar_frases()
         status_label.set_text(f'¡{palabra_arrastrada} asignada a la frase!')
         if palabra_arrastrada in botones_palabras:
             botones_palabras[palabra_arrastrada].disable()
@@ -71,9 +68,8 @@ def actualizar_frases():
         palabra = asignaciones.get(clave, '___')
         etiqueta = labels_por_frase[clave]
         etiqueta.set_text(plantilla.format(palabra))
-        etiqueta.style('color: #4b5563; font-size: 18px')  # color neutro
+        etiqueta.style('color: #4b5563; font-size: 18px')
 
-# 🧠 Función para verificar las respuestas
 def verificar_respuestas():
     correcto = 0
     for clave, (plantilla, respuesta) in frases.items():
@@ -100,7 +96,7 @@ ui.label('🎯 Palabras disponibles (haz clic para seleccionar):').style('font-w
 with ui.row().classes('bg-red-50 p-4 rounded shadow'):
     def crear_boton_palabra(palabra_texto):
         boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).style(
-            'color: #b91c1c; font-weight: bold; font-size: 16px; background-color: #fff; '
+            'color: #991b1b; font-weight: bold; font-size: 16px; background-color: #fff; '
             'padding: 8px 12px; margin: 4px; border-radius: 6px; border: 1px solid #fca5a5; '
             'box-shadow: 1px 1px 5px rgba(0,0,0,0.1);'
         )
@@ -124,7 +120,7 @@ with ui.column().classes('mt-4'):
 
 # ✅ Botón para verificar
 ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).classes(
-    'mt-4 bg-red-500 text-white rounded shadow-lg hover:bg-red-600 transition font-bold'
+    'mt-4 bg-red-600 text-white rounded shadow hover:bg-red-700 font-bold transition'
 )
 
 # 🔁 Botón para reiniciar
@@ -141,12 +137,11 @@ def reiniciar():
     status_label.set_text('Selecciona una palabra y luego haz clic en una frase.')
 
 ui.button('🔁 Reiniciar Juego', on_click=reiniciar).classes(
-    'color: #b91c1c; font-weight: bold; font-size: 16px; background-color: #fff; padding: 8px 12px; margin: 4px; border-radius: 6px; box-shadow: 1px 1px 5px rgba(0,0,0,0.1);'
+    'bg-red-600 text-white font-bold px-3 py-1 rounded shadow hover:bg-red-700 transition'
 )
 
 # Resultado final
 mensaje_final = ui.label('').style('font-size: 20px; margin-top: 20px; color: #4b5563')
-
 
 # 🖥️ Iniciar app
 if __name__ == '__main__':
