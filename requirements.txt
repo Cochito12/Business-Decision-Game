@@ -1,0 +1,3 @@
+# requirements.txt
+requirements = project_dir / "requirements.txt"
+requirements.write_text("nicegui")
