@@ -1,3 +1,4 @@
 # requirements.txt
 nicegui
+nest_asyncio
 
