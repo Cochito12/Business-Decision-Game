@@ -47,7 +47,7 @@ status_label = ui.label('Selecciona una palabra y luego haz clic en una frase.')
     'font-size: 16px; color: #b91c1c; margin-bottom: 20px;'
 )
 
-# Funciones del juego
+# Funciones
 def seleccionar_palabra(palabra):
     global palabra_arrastrada
     palabra_arrastrada = palabra
@@ -95,7 +95,7 @@ ui.label('🎯 Palabras disponibles (haz clic para seleccionar):').style('font-w
 
 with ui.row().classes('bg-red-50 p-4 rounded shadow'):
     def crear_boton_palabra(palabra_texto):
-        boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).style(
+        boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).classes(remove='btn').style(
             'color: #991b1b; font-weight: bold; font-size: 16px; background-color: #fff; '
             'padding: 8px 12px; margin: 4px; border-radius: 6px; border: 1px solid #fca5a5; '
             'box-shadow: 1px 1px 5px rgba(0,0,0,0.1);'
@@ -105,7 +105,7 @@ with ui.row().classes('bg-red-50 p-4 rounded shadow'):
     for palabra in palabras:
         crear_boton_palabra(palabra)
 
-# Frases
+# Frases con botón rojo
 ui.label('📝 Frases (haz clic en el espacio en blanco):').style('font-weight: bold; margin-top: 20px; margin-bottom: 10px;')
 
 with ui.column().classes('mt-4'):
@@ -114,13 +114,13 @@ with ui.column().classes('mt-4'):
             etiqueta = ui.label(plantilla.format('___')).style('font-size: 18px')
             labels_por_frase[clave] = etiqueta
 
-            ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).style(
+            ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).classes(remove='btn').style(
                 'background-color: #dc2626; color: white; font-weight: bold; padding: 6px 12px; '
                 'border-radius: 6px; margin-left: 12px; transition: 0.3s ease-in-out;'
             ).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
 
-# Botón verificar respuestas
-ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).style(
+# Botón revisar
+ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).classes(remove='btn').style(
     'background-color: #dc2626; color: white; font-weight: bold; padding: 10px 16px; '
     'border-radius: 8px; margin-top: 16px; transition: 0.3s ease-in-out;'
 ).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
@@ -138,15 +138,15 @@ def reiniciar():
     mensaje_final.set_text('')
     status_label.set_text('Selecciona una palabra y luego haz clic en una frase.')
 
-ui.button('🔁 Reiniciar Juego', on_click=reiniciar).style(
+ui.button('🔁 Reiniciar Juego', on_click=reiniciar).classes(remove='btn').style(
     'background-color: #dc2626; color: white; font-weight: bold; padding: 10px 16px; '
     'border-radius: 8px; margin-top: 10px; transition: 0.3s ease-in-out;'
 ).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
 
-# Resultado final
+# Resultado
 mensaje_final = ui.label('').style('font-size: 20px; margin-top: 20px; color: #4b5563')
 
-# Iniciar app
+# Run App
 if __name__ == '__main__':
     print("🚀 Iniciando Business Decision Game...")
     print("🌐 El juego estará disponible en: http://localhost:8080")
@@ -156,4 +156,3 @@ if __name__ == '__main__':
         show=True,
         reload=False
     )
-
