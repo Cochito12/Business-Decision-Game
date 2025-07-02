@@ -35,6 +35,107 @@ botones_palabras = {}
 popup_resultados = None
 popup_instrucciones = None
 
+# CSS responsivo
+ui.add_head_html('''
+<style>
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .mobile-title {
+            font-size: 24px !important;
+        }
+        .mobile-subtitle {
+            font-size: 18px !important;
+        }
+        .mobile-button {
+            font-size: 14px !important;
+            padding: 6px 10px !important;
+        }
+        .mobile-text {
+            font-size: 14px !important;
+        }
+        .mobile-frase {
+            font-size: 16px !important;
+        }
+        .mobile-logo {
+            height: 25px !important;
+        }
+    }
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .tablet-title {
+            font-size: 36px !important;
+        }
+        .tablet-logo {
+            height: 35px !important;
+        }
+    }
+    
+    @media (min-width: 1025px) {
+        .desktop-title {
+            font-size: 45px !important;
+        }
+        .desktop-logo {
+            height: 40px !important;
+        }
+    }
+    
+    /* Flexbox responsive */
+    .responsive-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .responsive-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .responsive-frase {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .responsive-button-container {
+        flex-shrink: 0;
+    }
+    
+    /* Logo responsive */
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .logo-img {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    
+    /* Botones responsivos */
+    .word-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        padding: 15px;
+        background-color: #fef2f2;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+</style>
+''')
+
 # Función para mostrar popup de instrucciones
 def mostrar_popup_instrucciones():
     global popup_instrucciones
@@ -46,7 +147,7 @@ def mostrar_popup_instrucciones():
     with ui.dialog().props('persistent') as popup:
         popup_instrucciones = popup
         
-        with ui.card().classes('p-6').style('min-width: 400px; position: relative;'):
+        with ui.card().classes('p-6').style('min-width: 90vw; max-width: 500px; position: relative;'):
             # Botón X en esquina superior derecha
             ui.button('×', on_click=lambda: cerrar_popup_instrucciones()).style(
                 'position: absolute; '
@@ -97,7 +198,7 @@ def mostrar_popup_resultados(correcto, total):
     with ui.dialog().props('persistent') as popup:
         popup_resultados = popup
         
-        with ui.card().classes('p-6 text-center').style('min-width: 300px; position: relative;'):
+        with ui.card().classes('p-6 text-center').style('min-width: 90vw; max-width: 400px; position: relative;'):
             # Botón X en esquina superior derecha
             ui.button('×', on_click=lambda: cerrar_popup()).style(
                 'position: absolute; '
@@ -129,7 +230,6 @@ def mostrar_popup_resultados(correcto, total):
             
             # Botón de reintentar
             if correcto == total:
-                # Si todas están correctas, el botón reinicia completamente
                 ui.button('🎉 Jugar de nuevo', on_click=lambda: reintentar_desde_popup()).style(
                     'background-color: #22c55e !important; '
                     'color: white !important; '
@@ -142,7 +242,6 @@ def mostrar_popup_resultados(correcto, total):
                     'margin-top: 10px;'
                 )
             else:
-                # Si hay errores, el botón solo corrige las incorrectas
                 ui.button('🔄 Corregir errores', on_click=lambda: reintentar_desde_popup()).style(
                     'background-color: #dc2626 !important; '
                     'color: white !important; '
@@ -227,89 +326,203 @@ def reiniciar_solo_incorrectas():
     mensaje_final.set_text('')
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
-# Título con imagen de Davivienda
-with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15px; flex-wrap: nowrap;'):
-    # Opción 1: Intentar con la ruta original
-    try:
-        logo_img = ui.image('/static/logo-davivienda.png').style(
-            'height: 30px; '
-            'width: auto; '
-            'object-fit: contain; '
-            'flex-shrink: 0; '
-            'border: 1px solid #ccc;'  # Borde para ver si el espacio está ahí
-        )
-        # Agregar manejo de error para la imagen
-        logo_img.on('error', lambda: print("❌ Error: No se pudo cargar el logo desde /static/logo-davivienda.png"))
-    except Exception as e:
-        print(f"❌ Error al crear la imagen: {e}")
-        # Fallback: mostrar un emoji o texto en lugar del logo
-        ui.label('🏦').style('font-size: 30px; flex-shrink: 0;')
+# Contenedor principal responsivo
+with ui.column().classes('w-full max-w-6xl mx-auto p-4'):
     
-    ui.label('Canvas - Juego Minders').style(
-        'font-size: 45px; '
-        'font-weight: bold; '
-        'color: #dc2626; '
-        'white-space: nowrap; '
-        'flex-shrink: 0;'
+    # Título con logo responsivo
+    with ui.element('div').classes('logo-container'):
+        # Múltiples intentos para cargar el logo
+        ui.element('div').style('display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;').add_slot('default', ui.html('''
+            <img src="/static/logo-davivienda.png" 
+                 alt="Davivienda Logo" 
+                 class="logo-img mobile-logo tablet-logo desktop-logo"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
+                 style="height: 40px; width: auto; object-fit: contain;">
+            <span style="display: none; font-size: 30px;">🏦</span>
+        '''))
+        
+        ui.label('Canvas - Juego Minders').classes('mobile-title tablet-title desktop-title').style(
+            'font-size: 45px; font-weight: bold; color: #dc2626; text-align: center; flex-shrink: 0;'
+        )
+
+    # Botón de instrucciones
+    with ui.row().classes('w-full justify-center mb-6'):
+        ui.button('📋 Ver Instrucciones', on_click=mostrar_popup_instrucciones).classes('mobile-button').style(
+            'background-color: #3b82f6 !important; '
+            'color: white !important; '
+            'font-weight: bold; '
+            'padding: 8px 16px; '
+            'border-radius: 8px; '
+            'border: 2px solid #3b82f6 !important; '
+            'cursor: pointer; '
+            'font-size: 14px; '
+            'transition: all 0.2s ease;'
+        )
+
+    # Mensaje de estado
+    status_label = ui.label('Selecciona una palabra y luego haz clic en una frase.').classes('mobile-text').style(
+        'font-size: 16px; color: #b91c1c; margin-bottom: 20px; text-align: center;'
     )
 
-# Botón de instrucciones centrado
-with ui.row().classes('w-full justify-center mb-6'):
-    ui.button('📋 Ver Instrucciones', on_click=mostrar_popup_instrucciones).style(
-        'background-color: #3b82f6 !important; '
-        'color: white !important; '
-        'font-weight: bold; '
-        'padding: 8px 16px; '
-        'border-radius: 8px; '
-        'border: 2px solid #3b82f6 !important; '
-        'cursor: pointer; '
-        'font-size: 14px; '
-        'transition: all 0.2s ease;'
-    ).on('mouseover', lambda e: e.sender.style(
-        'background-color: #2563eb !important; '
-        'color: white !important; '
-        'font-weight: bold; '
-        'padding: 8px 16px; '
-        'border-radius: 8px; '
-        'border: 2px solid #2563eb !important; '
-        'cursor: pointer; '
-        'font-size: 14px; '
-        'transition: all 0.2s ease; '
-        'transform: scale(1.05);'
-    )).on('mouseout', lambda e: e.sender.style(
-        'background-color: #3b82f6 !important; '
-        'color: white !important; '
-        'font-weight: bold; '
-        'padding: 8px 16px; '
-        'border-radius: 8px; '
-        'border: 2px solid #3b82f6 !important; '
-        'cursor: pointer; '
-        'font-size: 14px; '
-        'transition: all 0.2s ease; '
-        'transform: scale(1);'
-    ))
+    # Funciones (sin cambios)
+    def seleccionar_palabra(palabra):
+        global palabra_arrastrada
+        palabra_arrastrada = palabra
+        status_label.set_text(f'Palabra seleccionada: {palabra}. Ahora haz clic en una frase.')
 
-# Mensaje de estado
-status_label = ui.label('Selecciona una palabra y luego haz clic en una frase.').style(
-    'font-size: 16px; color: #b91c1c; margin-bottom: 20px;'
-)
+    def asignar_a_frase(clave):
+        global palabra_arrastrada
+        if palabra_arrastrada:
+            # Si había una palabra asignada anteriormente a esta frase, reactivar su botón
+            if clave in asignaciones:
+                palabra_anterior = asignaciones[clave]
+                if palabra_anterior in botones_palabras:
+                    botones_palabras[palabra_anterior].enable()
+                    # Restaurar estilo del botón reactivado
+                    botones_palabras[palabra_anterior].style(
+                        'background-color: #dc2626 !important; '
+                        'color: white !important; '
+                        'font-weight: bold; '
+                        'font-size: 16px; '
+                        'padding: 8px 12px; '
+                        'margin: 4px; '
+                        'border-radius: 6px; '
+                        'border: 2px solid #dc2626 !important; '
+                        'box-shadow: 0 2px 4px rgba(0,0,0,0.1); '
+                        'cursor: pointer; '
+                        'transition: all 0.2s ease;'
+                    )
+            
+            # Asignar la nueva palabra
+            asignaciones[clave] = palabra_arrastrada
+            actualizar_frases()
+            status_label.set_text(f'¡{palabra_arrastrada} asignada a la frase!')
+            
+            # Desactivar el botón de la palabra recién asignada
+            if palabra_arrastrada in botones_palabras:
+                botones_palabras[palabra_arrastrada].disable()
+            
+            palabra_arrastrada = None
 
-# Funciones
-def seleccionar_palabra(palabra):
-    global palabra_arrastrada
-    palabra_arrastrada = palabra
-    status_label.set_text(f'Palabra seleccionada: {palabra}. Ahora haz clic en una frase.')
+    def actualizar_frases():
+        for clave, (plantilla, _) in frases.items():
+            palabra = asignaciones.get(clave, '___')
+            etiqueta = labels_por_frase[clave]
+            etiqueta.set_text(plantilla.format(palabra))
+            
+            # Si hay palabra asignada, ponerla en negrita; si no, peso normal
+            if palabra != '___':
+                etiqueta.style('color: #000000; font-size: 18px; font-weight: bold;')
+            else:
+                etiqueta.style('color: #000000; font-size: 18px; font-weight: normal;')
 
-def asignar_a_frase(clave):
-    global palabra_arrastrada
-    if palabra_arrastrada:
-        # Si había una palabra asignada anteriormente a esta frase, reactivar su botón
-        if clave in asignaciones:
-            palabra_anterior = asignaciones[clave]
-            if palabra_anterior in botones_palabras:
-                botones_palabras[palabra_anterior].enable()
-                # Restaurar estilo del botón reactivado
-                botones_palabras[palabra_anterior].style(
+    def verificar_respuestas():
+        correcto = 0
+        total = len(frases)
+        
+        for clave, (plantilla, respuesta) in frases.items():
+            palabra = asignaciones.get(clave, '___')
+            etiqueta = labels_por_frase[clave]
+            etiqueta.set_text(plantilla.format(palabra))
+
+            if palabra == '___':
+                etiqueta.style('color: #4b5563; font-size: 18px')
+            elif palabra == respuesta:
+                etiqueta.style('color: green; font-weight: bold; font-size: 18px')
+                correcto += 1
+            else:
+                etiqueta.style('color: red; font-weight: bold; font-size: 18px')
+
+        # Mostrar popup con resultados
+        mostrar_popup_resultados(correcto, total)
+
+    # Palabras disponibles con diseño responsivo
+    ui.label('🎯 Palabras disponibles (haz clic para seleccionar):').classes('mobile-subtitle').style(
+        'font-weight: bold; margin-top: 20px; font-size: 18px; text-align: center;'
+    )
+
+    with ui.element('div').classes('word-buttons'):
+        def crear_boton_palabra(palabra_texto):
+            boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).classes('mobile-button').style(
+                'background-color: #dc2626 !important; '
+                'color: white !important; '
+                'font-weight: bold; '
+                'font-size: 16px; '
+                'padding: 8px 12px; '
+                'margin: 4px; '
+                'border-radius: 6px; '
+                'border: 2px solid #dc2626 !important; '
+                'box-shadow: 0 2px 4px rgba(0,0,0,0.1); '
+                'cursor: pointer; '
+                'transition: all 0.2s ease;'
+            )
+            botones_palabras[palabra_texto] = boton
+
+        for palabra in palabras:
+            crear_boton_palabra(palabra)
+
+    # Frases con diseño responsivo
+    ui.label('📝 Frases (haz clic en "Asignar aquí"):').classes('mobile-subtitle').style(
+        'font-weight: bold; margin-top: 20px; margin-bottom: 15px; font-size: 18px; text-align: center;'
+    )
+
+    with ui.column().classes('mt-4 w-full'):
+        for clave, (plantilla, _) in frases.items():
+            with ui.element('div').classes('responsive-row'):
+                with ui.element('div').classes('responsive-frase'):
+                    etiqueta = ui.label(plantilla.format('___')).classes('mobile-frase').style(
+                        'font-size: 18px; color: #000000; font-weight: normal; line-height: 1.4;'
+                    )
+                    labels_por_frase[clave] = etiqueta
+
+                with ui.element('div').classes('responsive-button-container'):
+                    ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).classes('mobile-button').style(
+                        'background-color: #dc2626 !important; '
+                        'color: white !important; '
+                        'font-weight: bold; '
+                        'padding: 6px 12px; '
+                        'border-radius: 6px; '
+                        'border: 2px solid #dc2626 !important; '
+                        'cursor: pointer; '
+                        'transition: all 0.2s ease; '
+                        'white-space: nowrap;'
+                    )
+
+    # Botones de acción con diseño responsivo
+    with ui.row().classes('w-full justify-center gap-4 mt-6 flex-wrap'):
+        ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).classes('mobile-button').style(
+            'background-color: #dc2626 !important; '
+            'color: white !important; '
+            'font-weight: bold; '
+            'padding: 10px 16px; '
+            'border-radius: 8px; '
+            'border: 2px solid #dc2626 !important; '
+            'cursor: pointer; '
+            'transition: all 0.2s ease; '
+            'font-size: 16px;'
+        )
+
+        # Botón reiniciar
+        def reiniciar():
+            global palabra_arrastrada, popup_resultados, popup_instrucciones
+            palabra_arrastrada = None
+            asignaciones.clear()
+            
+            # Cerrar popups si están abiertos
+            if popup_resultados:
+                popup_resultados.close()
+                popup_resultados = None
+            if popup_instrucciones:
+                popup_instrucciones.close()
+                popup_instrucciones = None
+            
+            for clave, (plantilla, _) in frases.items():
+                labels_por_frase[clave].set_text(plantilla.format('___'))
+                labels_por_frase[clave].style('color: #000000; font-size: 18px; font-weight: normal;')
+            for boton in botones_palabras.values():
+                boton.enable()
+                # Restaurar estilo original del botón
+                boton.style(
                     'background-color: #dc2626 !important; '
                     'color: white !important; '
                     'font-weight: bold; '
@@ -322,218 +535,30 @@ def asignar_a_frase(clave):
                     'cursor: pointer; '
                     'transition: all 0.2s ease;'
                 )
-        
-        # Asignar la nueva palabra
-        asignaciones[clave] = palabra_arrastrada
-        actualizar_frases()
-        status_label.set_text(f'¡{palabra_arrastrada} asignada a la frase!')
-        
-        # Desactivar el botón de la palabra recién asignada
-        if palabra_arrastrada in botones_palabras:
-            botones_palabras[palabra_arrastrada].disable()
-        
-        palabra_arrastrada = None
+            mensaje_final.set_text('')
+            status_label.set_text('Selecciona una palabra y luego haz clic en una frase.')
 
-def actualizar_frases():
-    for clave, (plantilla, _) in frases.items():
-        palabra = asignaciones.get(clave, '___')
-        etiqueta = labels_por_frase[clave]
-        etiqueta.set_text(plantilla.format(palabra))
-        
-        # Si hay palabra asignada, ponerla en negrita; si no, peso normal
-        if palabra != '___':
-            etiqueta.style('color: #000000; font-size: 18px; font-weight: bold;')
-        else:
-            etiqueta.style('color: #000000; font-size: 18px; font-weight: normal;')
-
-def verificar_respuestas():
-    correcto = 0
-    total = len(frases)
-    
-    for clave, (plantilla, respuesta) in frases.items():
-        palabra = asignaciones.get(clave, '___')
-        etiqueta = labels_por_frase[clave]
-        etiqueta.set_text(plantilla.format(palabra))
-
-        if palabra == '___':
-            etiqueta.style('color: #4b5563; font-size: 18px')
-        elif palabra == respuesta:
-            etiqueta.style('color: green; font-weight: bold; font-size: 18px')
-            correcto += 1
-        else:
-            etiqueta.style('color: red; font-weight: bold; font-size: 18px')
-
-    # Mostrar popup con resultados
-    mostrar_popup_resultados(correcto, total)
-
-# Palabras disponibles
-ui.label('🎯 Palabras disponibles (haz clic para seleccionar):').style('font-weight: bold; margin-top: 20px;')
-
-with ui.row().classes('bg-red-50 p-4 rounded shadow'):
-    def crear_boton_palabra(palabra_texto):
-        boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).style(
+        ui.button('🔁 Reiniciar Juego', on_click=reiniciar).classes('mobile-button').style(
             'background-color: #dc2626 !important; '
             'color: white !important; '
             'font-weight: bold; '
-            'font-size: 16px; '
-            'padding: 8px 12px; '
-            'margin: 4px; '
-            'border-radius: 6px; '
+            'padding: 10px 16px; '
+            'border-radius: 8px; '
             'border: 2px solid #dc2626 !important; '
-            'box-shadow: 0 2px 4px rgba(0,0,0,0.1); '
-            'cursor: pointer; '
-            'transition: all 0.2s ease;'
-        )
-        # Agregar hover effect
-        boton.on('mouseover', lambda: boton.style(
-            'background-color: #b91c1c !important; '
-            'color: white !important; '
-            'font-weight: bold; '
-            'font-size: 16px; '
-            'padding: 8px 12px; '
-            'margin: 4px; '
-            'border-radius: 6px; '
-            'border: 2px solid #b91c1c !important; '
-            'box-shadow: 0 4px 6px rgba(0,0,0,0.15); '
             'cursor: pointer; '
             'transition: all 0.2s ease; '
-            'transform: translateY(-1px);'
-        ))
-        boton.on('mouseout', lambda: boton.style(
-            'background-color: #dc2626 !important; '
-            'color: white !important; '
-            'font-weight: bold; '
-            'font-size: 16px; '
-            'padding: 8px 12px; '
-            'margin: 4px; '
-            'border-radius: 6px; '
-            'border: 2px solid #dc2626 !important; '
-            'box-shadow: 0 2px 4px rgba(0,0,0,0.1); '
-            'cursor: pointer; '
-            'transition: all 0.2s ease; '
-            'transform: translateY(0px);'
-        ))
-        botones_palabras[palabra_texto] = boton
-
-    for palabra in palabras:
-        crear_boton_palabra(palabra)
-
-# Frases con botón rojo
-ui.label('📝 Frases (haz clic en "Asignar aquí"):').style('font-weight: bold; margin-top: 20px; margin-bottom: 10px;')
-
-with ui.column().classes('mt-4'):
-    for clave, (plantilla, _) in frases.items():
-        with ui.row().classes('items-center mb-4'):
-            etiqueta = ui.label(plantilla.format('___')).style('font-size: 18px; color: #000000; font-weight: normal;')
-            labels_por_frase[clave] = etiqueta
-
-            boton_asignar = ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).style(
-                'background-color: #dc2626 !important; '
-                'color: white !important; '
-                'font-weight: bold; '
-                'padding: 6px 12px; '
-                'border-radius: 6px; '
-                'margin-left: 12px; '
-                'border: 2px solid #dc2626 !important; '
-                'cursor: pointer; '
-                'transition: all 0.2s ease;'
-            )
-            # Hover effects para botones de asignar
-            boton_asignar.on('mouseover', lambda e=boton_asignar: e.style(
-                'background-color: #b91c1c !important; '
-                'color: white !important; '
-                'font-weight: bold; '
-                'padding: 6px 12px; '
-                'border-radius: 6px; '
-                'margin-left: 12px; '
-                'border: 2px solid #b91c1c !important; '
-                'cursor: pointer; '
-                'transition: all 0.2s ease; '
-                'transform: scale(1.05);'
-            ))
-            boton_asignar.on('mouseout', lambda e=boton_asignar: e.style(
-                'background-color: #dc2626 !important; '
-                'color: white !important; '
-                'font-weight: bold; '
-                'padding: 6px 12px; '
-                'border-radius: 6px; '
-                'margin-left: 12px; '
-                'border: 2px solid #dc2626 !important; '
-                'cursor: pointer; '
-                'transition: all 0.2s ease; '
-                'transform: scale(1);'
-            ))
-
-# Botón revisar
-boton_revisar = ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).style(
-    'background-color: #dc2626 !important; '
-    'color: white !important; '
-    'font-weight: bold; '
-    'padding: 10px 16px; '
-    'border-radius: 8px; '
-    'margin-top: 16px; '
-    'border: 2px solid #dc2626 !important; '
-    'cursor: pointer; '
-    'transition: all 0.2s ease; '
-    'font-size: 16px;'
-)
-
-# Botón reiniciar
-def reiniciar():
-    global palabra_arrastrada, popup_resultados, popup_instrucciones
-    palabra_arrastrada = None
-    asignaciones.clear()
-    
-    # Cerrar popups si están abiertos
-    if popup_resultados:
-        popup_resultados.close()
-        popup_resultados = None
-    if popup_instrucciones:
-        popup_instrucciones.close()
-        popup_instrucciones = None
-    
-    for clave, (plantilla, _) in frases.items():
-        labels_por_frase[clave].set_text(plantilla.format('___'))
-        labels_por_frase[clave].style('color: #000000; font-size: 18px; font-weight: normal;')
-    for boton in botones_palabras.values():
-        boton.enable()
-        # Restaurar estilo original del botón
-        boton.style(
-            'background-color: #dc2626 !important; '
-            'color: white !important; '
-            'font-weight: bold; '
-            'font-size: 16px; '
-            'padding: 8px 12px; '
-            'margin: 4px; '
-            'border-radius: 6px; '
-            'border: 2px solid #dc2626 !important; '
-            'box-shadow: 0 2px 4px rgba(0,0,0,0.1); '
-            'cursor: pointer; '
-            'transition: all 0.2s ease;'
+            'font-size: 16px;'
         )
-    mensaje_final.set_text('')
-    status_label.set_text('Selecciona una palabra y luego haz clic en una frase.')
 
-boton_reiniciar = ui.button('🔁 Reiniciar Juego', on_click=reiniciar).style(
-    'background-color: #dc2626 !important; '
-    'color: white !important; '
-    'font-weight: bold; '
-    'padding: 10px 16px; '
-    'border-radius: 8px; '
-    'margin-top: 10px; '
-    'border: 2px solid #dc2626 !important; '
-    'cursor: pointer; '
-    'transition: all 0.2s ease; '
-    'font-size: 16px;'
-)
-
-# Resultado
-mensaje_final = ui.label('').style('font-size: 20px; margin-top: 20px; color: #4b5563')
+    # Resultado
+    mensaje_final = ui.label('').style('font-size: 20px; margin-top: 20px; color: #4b5563; text-align: center;')
 
 # Run App
 if __name__ == '__main__':
     print("🚀 Iniciando Business Decision Game...")
     print("🌐 El juego estará disponible en: http://localhost:8080")
+    print("📂 Buscando logo en: static/logo-davivienda.png")
+    print("💡 Asegúrate de que el archivo logo-davivienda.png esté en la carpeta 'static'")
     ui.run(
         title='Business Decision Game - Davivienda',
         port=8080,
