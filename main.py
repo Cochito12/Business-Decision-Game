@@ -228,7 +228,7 @@ def reiniciar_solo_incorrectas():
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
 # Título con imagen de Davivienda
-with ui.row().classes('justify-center items-center mb-4'):
+with ui.row().classes('justify-center mb-6'):
     with ui.row().classes('items-center gap-4'):
         ui.image('/static/logo-davivienda.png').style('height: 50px;')
         ui.label('Canvas - Juego Minders').style(
