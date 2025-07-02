@@ -227,14 +227,24 @@ def reiniciar_solo_incorrectas():
     mensaje_final.set_text('')
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
-# Título con imagen de Davivienda - CORREGIDO para mostrar lado a lado
+# Título con imagen de Davivienda
 with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15px; flex-wrap: nowrap;'):
-    ui.image('/static/logo-davivienda.png').style(
-        'height: 45px; '
-        'width: auto; '
-        'object-fit: contain; '
-        'flex-shrink: 0;'
-    )
+    # Opción 1: Intentar con la ruta original
+    try:
+        logo_img = ui.image('/static/logo-davivienda.png').style(
+            'height: 45px; '
+            'width: auto; '
+            'object-fit: contain; '
+            'flex-shrink: 0; '
+            'border: 1px solid #ccc;'  # Borde para ver si el espacio está ahí
+        )
+        # Agregar manejo de error para la imagen
+        logo_img.on('error', lambda: print("❌ Error: No se pudo cargar el logo desde /static/logo-davivienda.png"))
+    except Exception as e:
+        print(f"❌ Error al crear la imagen: {e}")
+        # Fallback: mostrar un emoji o texto en lugar del logo
+        ui.label('🏦').style('font-size: 40px; flex-shrink: 0;')
+    
     ui.label('Canvas - Juego Minders').style(
         'font-size: 28px; '
         'font-weight: bold; '
