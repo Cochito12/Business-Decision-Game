@@ -1,6 +1,9 @@
 import nest_asyncio
 nest_asyncio.apply()
-from nicegui import ui
+import os
+from nicegui import app, ui
+
+app.add_static_files('/static', os.path.join(os.path.dirname(__file__), 'static'))
 
 # Palabras disponibles y claves de frases
 palabras = [
