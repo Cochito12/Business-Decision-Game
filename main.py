@@ -33,7 +33,7 @@ botones_palabras = {}
 # Título
 ui.label('🚦 Business Decision Game').style('font-size: 50px; font-weight: bold; margin-bottom: 10px; color: #991b1b;')
 
-# 📋 Instrucciones
+# Instrucciones
 with ui.card().classes('mt-6 p-4 bg-red-50'):
     ui.label('📋 Instrucciones:').style('font-weight: bold; margin-bottom: 10px; color: #991b1b')
     ui.label('1. Haz clic en una palabra para seleccionarla')
@@ -42,12 +42,12 @@ with ui.card().classes('mt-6 p-4 bg-red-50'):
     ui.label('4. Las respuestas correctas se mostrarán en verde 💚')
     ui.label('5. ¡Completa todas las frases correctamente!')
 
-# 💬 Mensaje de estado
+# Mensaje de estado
 status_label = ui.label('Selecciona una palabra y luego haz clic en una frase.').style(
     'font-size: 16px; color: #b91c1c; margin-bottom: 20px;'
 )
 
-# 💡 Función para seleccionar palabra
+# Funciones del juego
 def seleccionar_palabra(palabra):
     global palabra_arrastrada
     palabra_arrastrada = palabra
@@ -90,7 +90,7 @@ def verificar_respuestas():
     else:
         mensaje_final.set_text('🔍 Algunas respuestas aún no son correctas. ¡Sigue intentando!')
 
-# 🎯 Palabras disponibles
+# Palabras disponibles
 ui.label('🎯 Palabras disponibles (haz clic para seleccionar):').style('font-weight: bold; margin-top: 20px;')
 
 with ui.row().classes('bg-red-50 p-4 rounded shadow'):
@@ -105,7 +105,7 @@ with ui.row().classes('bg-red-50 p-4 rounded shadow'):
     for palabra in palabras:
         crear_boton_palabra(palabra)
 
-# 📝 Frases
+# Frases
 ui.label('📝 Frases (haz clic en el espacio en blanco):').style('font-weight: bold; margin-top: 20px; margin-bottom: 10px;')
 
 with ui.column().classes('mt-4'):
@@ -114,16 +114,18 @@ with ui.column().classes('mt-4'):
             etiqueta = ui.label(plantilla.format('___')).style('font-size: 18px')
             labels_por_frase[clave] = etiqueta
 
-            ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).classes(
-                'ml-4 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition'
-            )
+            ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).style(
+                'background-color: #dc2626; color: white; font-weight: bold; padding: 6px 12px; '
+                'border-radius: 6px; margin-left: 12px; transition: 0.3s ease-in-out;'
+            ).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
 
-# ✅ Botón para verificar
-ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).classes(
-    'mt-4 bg-red-600 text-white rounded shadow hover:bg-red-700 font-bold transition'
-)
+# Botón verificar respuestas
+ui.button('✅ Revisar respuestas', on_click=verificar_respuestas).style(
+    'background-color: #dc2626; color: white; font-weight: bold; padding: 10px 16px; '
+    'border-radius: 8px; margin-top: 16px; transition: 0.3s ease-in-out;'
+).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
 
-# 🔁 Botón para reiniciar
+# Botón reiniciar
 def reiniciar():
     global palabra_arrastrada
     palabra_arrastrada = None
@@ -136,14 +138,15 @@ def reiniciar():
     mensaje_final.set_text('')
     status_label.set_text('Selecciona una palabra y luego haz clic en una frase.')
 
-ui.button('🔁 Reiniciar Juego', on_click=reiniciar).classes(
-    'bg-red-600 text-white font-bold px-3 py-1 rounded shadow hover:bg-red-700 transition'
-)
+ui.button('🔁 Reiniciar Juego', on_click=reiniciar).style(
+    'background-color: #dc2626; color: white; font-weight: bold; padding: 10px 16px; '
+    'border-radius: 8px; margin-top: 10px; transition: 0.3s ease-in-out;'
+).on('mouseover', lambda e: e.sender.style('background-color: #b91c1c'))
 
 # Resultado final
 mensaje_final = ui.label('').style('font-size: 20px; margin-top: 20px; color: #4b5563')
 
-# 🖥️ Iniciar app
+# Iniciar app
 if __name__ == '__main__':
     print("🚀 Iniciando Business Decision Game...")
     print("🌐 El juego estará disponible en: http://localhost:8080")
@@ -153,3 +156,4 @@ if __name__ == '__main__':
         show=True,
         reload=False
     )
+
