@@ -79,61 +79,21 @@ ui.add_head_html('''
         }
     }
     
-    /* Flexbox responsive */
-    .responsive-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .responsive-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    
-    .responsive-frase {
-        flex: 1;
-        min-width: 200px;
-    }
-    
-    .responsive-button-container {
-        flex-shrink: 0;
-    }
-    
     /* Logo responsive */
-    .logo-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
-    
     .logo-img {
         height: 40px;
         width: auto;
         object-fit: contain;
         flex-shrink: 0;
     }
-    
-    /* Botones responsivos */
-    .word-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        padding: 15px;
-        background-color: #fef2f2;
-        border-radius: 8px;
-        margin: 10px 0;
-    }
 </style>
+<script>
+function handleLogoError(img) {
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if (fallback) fallback.style.display = 'inline';
+}
+</script>
 ''')
 
 # Función para mostrar popup de instrucciones
@@ -330,16 +290,30 @@ def reiniciar_solo_incorrectas():
 with ui.column().classes('w-full max-w-6xl mx-auto p-4'):
     
     # Título con logo responsivo
-    with ui.element('div').classes('logo-container'):
-        # Múltiples intentos para cargar el logo
-        ui.element('div').style('display: flex; align-items: center; gap: 15px; flex-wrap: wrap; justify-content: center;').add_slot('default', ui.html('''
-            <img src="/static/logo-davivienda.png" 
-                 alt="Davivienda Logo" 
-                 class="logo-img mobile-logo tablet-logo desktop-logo"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
-                 style="height: 40px; width: auto; object-fit: contain;">
-            <span style="display: none; font-size: 30px;">🏦</span>
-        '''))
+    with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15px; flex-wrap: wrap;'):
+        # Intentar cargar el logo con manejo de errores
+        logo_container = ui.element('div').style('display: flex; align-items: center;')
+        
+        # Agregar JavaScript para el manejo de errores del logo
+        ui.add_head_html('''
+        <script>
+        function handleLogoError(img) {
+            img.style.display = 'none';
+            const fallback = img.nextElementSibling;
+            if (fallback) fallback.style.display = 'inline';
+        }
+        </script>
+        ''')
+        
+        with logo_container:
+            ui.html('''
+                <img src="/static/logo-davivienda.png" 
+                     alt="Davivienda Logo" 
+                     class="logo-img mobile-logo tablet-logo desktop-logo"
+                     onerror="handleLogoError(this)"
+                     style="height: 40px; width: auto; object-fit: contain;">
+                <span style="display: none; font-size: 30px;">🏦</span>
+            ''')
         
         ui.label('Canvas - Juego Minders').classes('mobile-title tablet-title desktop-title').style(
             'font-size: 45px; font-weight: bold; color: #dc2626; text-align: center; flex-shrink: 0;'
@@ -441,7 +415,7 @@ with ui.column().classes('w-full max-w-6xl mx-auto p-4'):
         'font-weight: bold; margin-top: 20px; font-size: 18px; text-align: center;'
     )
 
-    with ui.element('div').classes('word-buttons'):
+    with ui.row().classes('bg-red-50 p-4 rounded shadow justify-center flex-wrap gap-2'):
         def crear_boton_palabra(palabra_texto):
             boton = ui.button(text=palabra_texto, on_click=lambda: seleccionar_palabra(palabra_texto)).classes('mobile-button').style(
                 'background-color: #dc2626 !important; '
@@ -468,25 +442,27 @@ with ui.column().classes('w-full max-w-6xl mx-auto p-4'):
 
     with ui.column().classes('mt-4 w-full'):
         for clave, (plantilla, _) in frases.items():
-            with ui.element('div').classes('responsive-row'):
-                with ui.element('div').classes('responsive-frase'):
+            with ui.row().classes('items-center mb-4 flex-wrap gap-2'):
+                # Frase en un contenedor flex
+                with ui.element('div').classes('flex-1 min-w-0'):
                     etiqueta = ui.label(plantilla.format('___')).classes('mobile-frase').style(
-                        'font-size: 18px; color: #000000; font-weight: normal; line-height: 1.4;'
+                        'font-size: 18px; color: #000000; font-weight: normal; line-height: 1.4; word-wrap: break-word;'
                     )
                     labels_por_frase[clave] = etiqueta
 
-                with ui.element('div').classes('responsive-button-container'):
-                    ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).classes('mobile-button').style(
-                        'background-color: #dc2626 !important; '
-                        'color: white !important; '
-                        'font-weight: bold; '
-                        'padding: 6px 12px; '
-                        'border-radius: 6px; '
-                        'border: 2px solid #dc2626 !important; '
-                        'cursor: pointer; '
-                        'transition: all 0.2s ease; '
-                        'white-space: nowrap;'
-                    )
+                # Botón en contenedor flex-shrink-0
+                ui.button('Asignar aquí', on_click=lambda c=clave: asignar_a_frase(c)).classes('mobile-button').style(
+                    'background-color: #dc2626 !important; '
+                    'color: white !important; '
+                    'font-weight: bold; '
+                    'padding: 6px 12px; '
+                    'border-radius: 6px; '
+                    'border: 2px solid #dc2626 !important; '
+                    'cursor: pointer; '
+                    'transition: all 0.2s ease; '
+                    'white-space: nowrap; '
+                    'flex-shrink: 0;'
+                )
 
     # Botones de acción con diseño responsivo
     with ui.row().classes('w-full justify-center gap-4 mt-6 flex-wrap'):
