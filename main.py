@@ -225,15 +225,11 @@ def reiniciar_solo_incorrectas():
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
 # Título con imagen de Davivienda
-with ui.row().classes('w-full items-center justify-center mb-4'):
-    # Intentar cargar la imagen de Davivienda
-    try:
-        ui.image('davivienda.png').style('height: 80px; margin-right: 20px;')
-    except:
-        # Si no se encuentra la imagen, mostrar un placeholder
-        ui.label('🏦').style('font-size: 50px; margin-right: 20px; color: #dc2626;')
-    
-    ui.label('Canvas - Juego Minders').style('font-size: 50px; font-weight: bold; color: #dc2626; text-align: center;')
+with ui.row().classes('items-center justify-center gap-4 mb-4'):
+    ui.image('logo-davivienda.png').style('height: 50px;')
+    ui.label('Canvas - Juego Minders').style(
+        'font-size: 34px; font-weight: bold; color: #dc2626;'
+    )
 
 # Botón de instrucciones centrado
 with ui.row().classes('w-full justify-center mb-6'):
