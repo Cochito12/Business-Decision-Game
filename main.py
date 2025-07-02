@@ -322,12 +322,12 @@ with ui.column().classes('w-full max-w-6xl mx-auto p-4'):
     # Botón de instrucciones
     with ui.row().classes('w-full justify-center mb-6'):
         ui.button('📋 Ver Instrucciones', on_click=mostrar_popup_instrucciones).classes('mobile-button').style(
-            'background-color: #3b82f6 !important; '
+            'background-color: #dc2626 !important; '
             'color: white !important; '
             'font-weight: bold; '
             'padding: 8px 16px; '
             'border-radius: 8px; '
-            'border: 2px solid #3b82f6 !important; '
+            'border: 2px solid #dc2626 !important; '
             'cursor: pointer; '
             'font-size: 14px; '
             'transition: all 0.2s ease;'
