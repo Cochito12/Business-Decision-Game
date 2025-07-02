@@ -232,7 +232,7 @@ with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15p
     # Opción 1: Intentar con la ruta original
     try:
         logo_img = ui.image('/static/logo-davivienda.png').style(
-            'height: 45px; '
+            'height: 30px; '
             'width: auto; '
             'object-fit: contain; '
             'flex-shrink: 0; '
@@ -243,10 +243,10 @@ with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15p
     except Exception as e:
         print(f"❌ Error al crear la imagen: {e}")
         # Fallback: mostrar un emoji o texto en lugar del logo
-        ui.label('🏦').style('font-size: 40px; flex-shrink: 0;')
+        ui.label('🏦').style('font-size: 30px; flex-shrink: 0;')
     
     ui.label('Canvas - Juego Minders').style(
-        'font-size: 28px; '
+        'font-size: 45px; '
         'font-weight: bold; '
         'color: #dc2626; '
         'white-space: nowrap; '
