@@ -227,13 +227,12 @@ def reiniciar_solo_incorrectas():
     mensaje_final.set_text('')
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
-# Título con imagen de Davivienda
-with ui.row().classes('justify-center mb-6'):
-    with ui.row().classes('items-center gap-4'):
-        ui.image('/static/logo-davivienda.png').style('height: 50px;')
-        ui.label('Canvas - Juego Minders').style(
-            'font-size: 34px; font-weight: bold; color: #dc2626;'
-        )
+# Título con imagen de Davivienda - CORREGIDO
+with ui.row().classes('w-full justify-center items-center gap-4 mb-6'):
+    ui.image('/static/logo-davivienda.png').style('height: 50px;')
+    ui.label('Canvas - Juego Minders').style(
+        'font-size: 34px; font-weight: bold; color: #dc2626;'
+    )
 
 # Botón de instrucciones centrado
 with ui.row().classes('w-full justify-center mb-6'):
