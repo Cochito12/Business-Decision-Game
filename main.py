@@ -227,11 +227,20 @@ def reiniciar_solo_incorrectas():
     mensaje_final.set_text('')
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
-# Título con imagen de Davivienda - CORREGIDO
-with ui.row().classes('w-full justify-center items-center gap-4 mb-6'):
-    ui.image('/static/logo-davivienda.png').style('height: 50px;')
+# Título con imagen de Davivienda - CORREGIDO para mostrar lado a lado
+with ui.row().classes('w-full justify-center items-center mb-6').style('gap: 15px; flex-wrap: nowrap;'):
+    ui.image('/static/logo-davivienda.png').style(
+        'height: 45px; '
+        'width: auto; '
+        'object-fit: contain; '
+        'flex-shrink: 0;'
+    )
     ui.label('Canvas - Juego Minders').style(
-        'font-size: 34px; font-weight: bold; color: #dc2626;'
+        'font-size: 28px; '
+        'font-weight: bold; '
+        'color: #dc2626; '
+        'white-space: nowrap; '
+        'flex-shrink: 0;'
     )
 
 # Botón de instrucciones centrado
