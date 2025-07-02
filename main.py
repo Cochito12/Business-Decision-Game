@@ -224,9 +224,16 @@ def reiniciar_solo_incorrectas():
     mensaje_final.set_text('')
     status_label.set_text('✅ Se mantuvieron las respuestas correctas. Corrige las incorrectas.')
 
-# Título y botón de instrucciones
+# Título con imagen de Davivienda
 with ui.row().classes('w-full items-center justify-center mb-4'):
-    ui.label('🚦 Business Decision Game').style('font-size: 50px; font-weight: bold; color: #991b1b; text-align: center;')
+    # Intentar cargar la imagen de Davivienda
+    try:
+        ui.image('davivienda.png').style('height: 80px; margin-right: 20px;')
+    except:
+        # Si no se encuentra la imagen, mostrar un placeholder
+        ui.label('🏦').style('font-size: 50px; margin-right: 20px; color: #dc2626;')
+    
+    ui.label('Canvas - Juego Minders').style('font-size: 50px; font-weight: bold; color: #dc2626; text-align: center;')
 
 # Botón de instrucciones centrado
 with ui.row().classes('w-full justify-center mb-6'):
@@ -510,7 +517,7 @@ if __name__ == '__main__':
     print("🚀 Iniciando Business Decision Game...")
     print("🌐 El juego estará disponible en: http://localhost:8080")
     ui.run(
-        title='Business Decision Game',
+        title='Business Decision Game - Davivienda',
         port=8080,
         show=True,
         reload=False
